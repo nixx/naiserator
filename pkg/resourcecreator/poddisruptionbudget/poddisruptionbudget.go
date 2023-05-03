@@ -2,7 +2,7 @@ package poddisruptionbudget
 
 import (
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
-	policyv1beta1 "k8s.io/api/policy/v1beta1"
+	policyv1beta1 "k8s.io/api/policy/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 

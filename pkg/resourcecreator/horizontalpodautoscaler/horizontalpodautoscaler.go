@@ -2,7 +2,7 @@ package horizontalpodautoscaler
 
 import (
 	"github.com/nais/liberator/pkg/apis/nais.io/v1"
-	"k8s.io/api/autoscaling/v2beta2"
+	autoscaling "k8s.io/api/autoscaling/v2"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/nais/naiserator/pkg/resourcecreator/resource"
@@ -24,25 +24,25 @@ func Create(source Source, ast *resource.Ast) {
 		return
 	}
 
-	hpa := &v2beta2.HorizontalPodAutoscaler{
+	hpa := &autoscaling.HorizontalPodAutoscaler{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "HorizontalPodAutoscaler",
-			APIVersion: v2beta2.SchemeGroupVersion.Identifier(),
+			APIVersion: autoscaling.SchemeGroupVersion.Identifier(),
 		},
 		ObjectMeta: resource.CreateObjectMeta(source),
-		Spec: v2beta2.HorizontalPodAutoscalerSpec{
-			ScaleTargetRef: v2beta2.CrossVersionObjectReference{
+		Spec: autoscaling.HorizontalPodAutoscalerSpec{
+			ScaleTargetRef: autoscaling.CrossVersionObjectReference{
 				APIVersion: "apps/v1",
 				Kind:       "Deployment",
 				Name:       source.GetName(),
 			},
-			Metrics: []v2beta2.MetricSpec{
+			Metrics: []autoscaling.MetricSpec{
 				{
-					Type: v2beta2.ResourceMetricSourceType,
-					Resource: &v2beta2.ResourceMetricSource{
+					Type: autoscaling.ResourceMetricSourceType,
+					Resource: &autoscaling.ResourceMetricSource{
 						Name: "cpu",
-						Target: v2beta2.MetricTarget{
-							Type:               v2beta2.UtilizationMetricType,
+						Target: autoscaling.MetricTarget{
+							Type:               autoscaling.UtilizationMetricType,
 							AverageUtilization: util.Int32p(int32(replicas.CpuThresholdPercentage)),
 						},
 					},

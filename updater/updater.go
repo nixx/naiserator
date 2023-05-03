@@ -135,6 +135,8 @@ func FindAll(ctx context.Context, cli client.Client, scheme *runtime.Scheme, typ
 	for _, obj := range types {
 		err = cli.List(ctx, obj, listopt)
 		if err != nil {
+			fmt.Println(err)
+			fmt.Println(obj)
 			return nil, fmt.Errorf("list %T: %w", obj, err)
 		}
 

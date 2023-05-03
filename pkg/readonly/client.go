@@ -23,6 +23,10 @@ type Client struct {
 	client client.Client
 }
 
+type SubResourceClient struct {
+	subResourceClient client.SubResourceClient
+}
+
 // Scheme returns the scheme this client is using.
 func (n *Client) Scheme() *runtime.Scheme {
 	return n.client.Scheme()
@@ -33,9 +37,9 @@ func (n *Client) RESTMapper() meta.RESTMapper {
 	return n.client.RESTMapper()
 }
 
-func (c *Client) Get(ctx context.Context, key client.ObjectKey, obj client.Object) error {
+func (c *Client) Get(ctx context.Context, key client.ObjectKey, obj client.Object, opts ...client.GetOption) error {
 	// log.Debugf("Read-only client: GET %s", naiserator_scheme.TypeName(obj))
-	return c.client.Get(ctx, key, obj)
+	return c.client.Get(ctx, key, obj, opts...)
 }
 
 func (c *Client) List(ctx context.Context, list client.ObjectList, opts ...client.ListOption) error {
@@ -68,6 +72,13 @@ func (c *Client) DeleteAllOf(ctx context.Context, obj client.Object, opts ...cli
 	return nil
 }
 
-func (c *Client) Status() client.StatusWriter {
-	return c
+func (c *Client) SubResource(subresource string) client.SubResourceClient {
+	log.Debugf("Read-only client")
+	return c.client.SubResource(subresource)
 }
+
+func (c *Client) Status() client.StatusWriter {
+	return c.Status()
+}
+
+func (c *SubResourceClient)
