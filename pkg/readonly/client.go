@@ -74,11 +74,29 @@ func (c *Client) DeleteAllOf(ctx context.Context, obj client.Object, opts ...cli
 
 func (c *Client) SubResource(subresource string) client.SubResourceClient {
 	log.Debugf("Read-only client")
-	return c.client.SubResource(subresource)
+	subresourceClient := &SubResourceClient{c.client.SubResource(subresource)}
+	return subresourceClient
 }
 
 func (c *Client) Status() client.StatusWriter {
 	return c.Status()
 }
 
-func (c *SubResourceClient)
+func (c *SubResourceClient) Get(ctx context.Context, obj client.Object, subResource client.Object, opts ...client.SubResourceGetOption) error {
+	return c.subResourceClient.Get(ctx, obj, subResource, opts...)
+}
+
+func (c *SubResourceClient) Create(ctx context.Context, obj client.Object, subResource client.Object, opts ...client.SubResourceCreateOption) error {
+	log.Debugf("Read only subresource client ignoring CREATE")
+	return nil
+}
+
+func (c *SubResourceClient) Update(ctx context.Context, obj client.Object, opts ...client.SubResourceUpdateOption) error {
+	log.Debugf("Read only subresource client ignoring UPDATE")
+	return nil
+}
+
+func (c *SubResourceClient) Patch(ctx context.Context, obj client.Object, patch client.Patch, opts ...client.SubResourcePatchOption) error {
+	log.Debugf("Read only subresource client ignoring PATH")
+	return nil
+}
